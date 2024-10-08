@@ -31,8 +31,8 @@ public class FlightBookingSystemTest {
         boolean isCancellation = false;
 
         BookingResult result = flightBookingSystem.bookFlight(passengers, bookingTime, availableSeats,
-                                                                currentPrice, previousSales, isCancellation,
-                                                                departureTime, rewardPointsAvailable);
+                                                              currentPrice, previousSales, isCancellation,
+                                                              departureTime, rewardPointsAvailable);
         assertFalse(result.confirmation);
         assertEquals(0, result.refundAmount, 0.005);
         assertEquals(0, result.totalPrice, 0.005);
