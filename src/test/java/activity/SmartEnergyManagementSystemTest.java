@@ -93,31 +93,31 @@ private SmartEnergyManagementSystem energySystem;
         assertEquals(totalEnergyUsedToday - 2, result.totalEnergyUsed, 0.005);
     }
 
-    // @Test(timeout=1000)
-    // public void testNightModeAndExceedingUsageWithoutAvailableDevices() {
-    //     double currentPrice = 0.05;
-    //     double priceThreshold = 0.20;
-    //     LocalDateTime currentTime = LocalDateTime.of(2024, 10, 1, 4, 20);
-    //     double[] desiredTemperatureRange = {20.0, 24.0};
-    //     double currentTemperature = 22.0;
-    //     double energyUsageLimit = 30.0;
-    //     double totalEnergyUsedToday = 35.0;
+    @Test(timeout=1000)
+    public void testNightModeAndExceedingUsageWithoutAvailableDevices() {
+        double currentPrice = 0.05;
+        double priceThreshold = 0.20;
+        LocalDateTime currentTime = LocalDateTime.of(2024, 10, 1, 4, 20);
+        double[] desiredTemperatureRange = {20.0, 24.0};
+        double currentTemperature = 22.0;
+        double energyUsageLimit = 30.0;
+        double totalEnergyUsedToday = 35.0;
 
-    //     EnergyManagementResult result = energySystem.manageEnergy(currentPrice, priceThreshold, devicePriorities,
-    //                                                               currentTime, currentTemperature, desiredTemperatureRange,
-    //                                                               energyUsageLimit, totalEnergyUsedToday, scheduledDevices);
+        EnergyManagementResult result = energySystem.manageEnergy(currentPrice, priceThreshold, devicePriorities,
+                                                                  currentTime, currentTemperature, desiredTemperatureRange,
+                                                                  energyUsageLimit, totalEnergyUsedToday, scheduledDevices);
 
-    //     // Check status of each device
-    //     assertFalse(result.deviceStatus.get("Heating"));
-    //     assertFalse(result.deviceStatus.get("Cooling"));
-    //     assertFalse(result.deviceStatus.get("Lights"));
-    //     assertFalse(result.deviceStatus.get("Appliances"));
-    //     assertFalse(result.deviceStatus.get("Security"));
-    //     assertFalse(result.deviceStatus.get("Refrigerator"));
+        // Check status of each device
+        assertFalse(result.deviceStatus.get("Heating"));
+        assertFalse(result.deviceStatus.get("Cooling"));
+        assertFalse(result.deviceStatus.get("Lights"));
+        assertFalse(result.deviceStatus.get("Appliances"));
+        assertFalse(result.deviceStatus.get("Security"));
+        assertFalse(result.deviceStatus.get("Refrigerator"));
 
-    //     assertFalse(result.energySavingMode);
-    //     assertFalse(result.temperatureRegulationActive);
-    //     // Turn two devices off (Security & Refrigerator)
-    //     assertEquals(totalEnergyUsedToday - 2, result.totalEnergyUsed, 0.005);
-    // }
+        assertFalse(result.energySavingMode);
+        assertFalse(result.temperatureRegulationActive);
+        // Turn two devices off (Security & Refrigerator)
+        assertEquals(totalEnergyUsedToday - 2, result.totalEnergyUsed, 0.005);
+    }
 }
