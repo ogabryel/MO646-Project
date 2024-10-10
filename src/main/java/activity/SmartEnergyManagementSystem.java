@@ -81,10 +81,21 @@ public class SmartEnergyManagementSystem {
 
         // Shut down devices as energy limit is approached
         while (totalEnergyUsedToday >= energyUsageLimit && deviceStatus.containsValue(true)) {
+            // Shut down low-priority devices first
             for (Map.Entry<String, Integer> entry : devicePriorities.entrySet()) {
                 if (deviceStatus.get(entry.getKey()) && entry.getValue() > 1) {
                     deviceStatus.put(entry.getKey(), false);
                     totalEnergyUsedToday -= 1;  // Simulate energy reduction
+                }
+            }
+
+            // If energy limit is still high, shut down high-priority devices
+            while (totalEnergyUsedToday >= energyUsageLimit && deviceStatus.containsValue(true)) {
+                for (Map.Entry<String, Integer> entry : devicePriorities.entrySet()) {
+                    if (deviceStatus.get(entry.getKey())) {
+                        deviceStatus.put(entry.getKey(), false);
+                        totalEnergyUsedToday -= 1;  // Simulate energy reduction
+                    }
                 }
             }
         }
