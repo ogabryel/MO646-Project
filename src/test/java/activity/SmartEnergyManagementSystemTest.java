@@ -120,4 +120,59 @@ private SmartEnergyManagementSystem energySystem;
         // Turn two devices off (Security & Refrigerator)
         assertEquals(totalEnergyUsedToday - 2, result.totalEnergyUsed, 0.005);
     }
+
+    @Test(timeout=1000)
+    public void testMutantDetectionOn43And62And71And83And93() {
+        double currentPrice = 0.20;
+        double priceThreshold = 0.20;
+        LocalDateTime currentTime = LocalDateTime.of(2024, 10, 1, 23, 00);
+        double[] desiredTemperatureRange = {20.0, 24.0};
+        double currentTemperature = 20.0;
+        double energyUsageLimit = 30.0;
+        double totalEnergyUsedToday = 30.0;
+
+        EnergyManagementResult result = energySystem.manageEnergy(currentPrice, priceThreshold, devicePriorities,
+                                                                  currentTime, currentTemperature, desiredTemperatureRange,
+                                                                  energyUsageLimit, totalEnergyUsedToday, scheduledDevices);
+
+        // Check status of each device
+        assertFalse(result.deviceStatus.get("Heating"));
+        assertFalse(result.deviceStatus.get("Cooling"));
+        assertFalse(result.deviceStatus.get("Lights"));
+        assertFalse(result.deviceStatus.get("Appliances"));
+        assertFalse(result.deviceStatus.get("Security"));
+        assertFalse(result.deviceStatus.get("Refrigerator"));
+
+        assertFalse(result.energySavingMode);
+        assertFalse(result.temperatureRegulationActive);
+        // Turn two devices off (Security & Refrigerator)
+        assertEquals(totalEnergyUsedToday - 2, result.totalEnergyUsed, 0.005);
+    }
+
+    @Test(timeout=1000)
+    public void testMutantDetectionOn62And74() {
+        double currentPrice = 0.20;
+        double priceThreshold = 0.25;
+        LocalDateTime currentTime = LocalDateTime.of(2024, 10, 1, 6, 00);
+        double[] desiredTemperatureRange = {20.0, 24.0};
+        double currentTemperature = 24.0;
+        double energyUsageLimit = 40.0;
+        double totalEnergyUsedToday = 30.0;
+
+        EnergyManagementResult result = energySystem.manageEnergy(currentPrice, priceThreshold, devicePriorities,
+                                                                  currentTime, currentTemperature, desiredTemperatureRange,
+                                                                  energyUsageLimit, totalEnergyUsedToday, scheduledDevices);
+
+        // Check status of each device
+        assertFalse(result.deviceStatus.get("Heating"));
+        assertFalse(result.deviceStatus.get("Cooling"));
+        assertTrue(result.deviceStatus.get("Lights"));
+        assertTrue(result.deviceStatus.get("Appliances"));
+        assertTrue(result.deviceStatus.get("Security"));
+        assertTrue(result.deviceStatus.get("Refrigerator"));
+
+        assertFalse(result.energySavingMode);
+        assertFalse(result.temperatureRegulationActive);
+        assertEquals(totalEnergyUsedToday, result.totalEnergyUsed, 0.005);
+    }
 }
