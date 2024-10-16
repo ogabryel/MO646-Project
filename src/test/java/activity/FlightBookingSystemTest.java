@@ -61,11 +61,11 @@ public class FlightBookingSystemTest {
     }
 
     @Test
-    public void testIsCancellationInThreeDays(){
+    public void testIsCancellationInExactlyTwoDays(){
         int passengers = 4;
         int availableSeats = 100;
         LocalDateTime bookingTime = LocalDateTime.now();
-        LocalDateTime departureTime = bookingTime.plusDays(3);
+        LocalDateTime departureTime = bookingTime.plusDays(2);
         int rewardPointsAvailable = 0;
         double currentPrice = 1000.0;
         int previousSales = 100;
@@ -98,6 +98,46 @@ public class FlightBookingSystemTest {
         assertEquals(1600, result.refundAmount, 0.005);
         // totalPrice = (currentPrice * priceFactor * passengers + 100) * 0.95 - rewardPoints*0.01
         assertEquals(0, result.totalPrice, 0.005);
+        assertFalse(result.pointsUsed);
+    }
+
+    @Test
+    public void testHasTheLimitOfAvailableSeats(){
+        int passengers = 5;
+        int availableSeats = 5;
+        LocalDateTime bookingTime = LocalDateTime.now();
+        LocalDateTime departureTime = bookingTime.plusHours(20);
+        int rewardPointsAvailable = 1000;
+        double currentPrice = 1000.0;
+        int previousSales = 100;
+        boolean isCancellation = false;
+
+        BookingResult result = flightBookingSystem.bookFlight(passengers, bookingTime, availableSeats,
+                                                              currentPrice, previousSales, isCancellation,
+                                                              departureTime, rewardPointsAvailable);
+        assertTrue(result.confirmation);
+        assertEquals(0, result.refundAmount, 0.005);
+        assertEquals(3885, result.totalPrice, 0.005);
+        assertTrue(result.pointsUsed);
+    }
+
+    @Test
+    public void testDoNotApplyRewardPoints(){
+        int passengers = 5;
+        int availableSeats = 100;
+        LocalDateTime bookingTime = LocalDateTime.now();
+        LocalDateTime departureTime = bookingTime.plusHours(20);
+        int rewardPointsAvailable = 0;
+        double currentPrice = 1000.0;
+        int previousSales = 100;
+        boolean isCancellation = false;
+
+        BookingResult result = flightBookingSystem.bookFlight(passengers, bookingTime, availableSeats,
+                                                              currentPrice, previousSales, isCancellation,
+                                                              departureTime, rewardPointsAvailable);
+        assertTrue(result.confirmation);
+        assertEquals(0, result.refundAmount, 0.005);
+        assertEquals(3895, result.totalPrice, 0.005);
         assertFalse(result.pointsUsed);
     }
 }
